@@ -1,0 +1,14 @@
+﻿flight,sample_id,material,width_cm,length_cm,thickness_mm,airflow_cm_s,flow_direction,initial_oxygen_vol_pct,burn_duration_s,burn_length_cm,spread_rate_mm_s,outcome,source_note,width_m,length_m,thickness_m,airflow_m_s,spread_rate_m_s
+SAFFIRE-I,I-1,Cotton-fiberglass SIBAL,40.6,94,0.37,20,Concurrent,21.7,420,84,1.8,Burned for allotted duration; airflow shutoff extinguished flame,"NASA NTRS 2017 report, Table I",0.406,0.94,0.00037,0.2,0.0018
+SAFFIRE-I,I-2,Cotton-fiberglass SIBAL,40.6,10,0.37,20,Opposed,21.5,70,10,1.3,Opposed-flow spread over remaining fuel,"NASA NTRS 2017 report, Table I",0.406,0.1,0.00037,0.2,0.0013
+SAFFIRE-II,II-1,Silicone,5,29,0.27,20,Concurrent,22.1,,0,,No sustained flame spread; residual flame extinguished,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00027,0.2,
+SAFFIRE-II,II-2,Silicone,5,29,0.61,20,Concurrent,22.1,,0,,No sustained flame spread; residual flame extinguished,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00061,0.2,
+SAFFIRE-II,II-3,Silicone,5,29,1.03,20,Concurrent,22.1,,0,,No sustained flame spread; residual flame extinguished,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00103,0.2,
+SAFFIRE-II,II-4,Silicone,5,29,0.37,20,Opposed,22.1,,0,,No sustained flame spread; residual flame extinguished,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00037,0.2,
+SAFFIRE-II,II-5,Cotton-fiberglass SIBAL,5,29,0.37,20,Concurrent,22.1,145,29,2.1,Burned full sample length,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00037,0.2,0.0021000000000000003
+SAFFIRE-II,II-6,Cotton-fiberglass SIBAL,5,29,0.37,25,Concurrent,22.1,115,29,2.6,Burned full sample length,"NASA NTRS 2017 report, Table I",0.05,0.29,0.00037,0.25,0.0026
+SAFFIRE-II,II-7,PMMA lead-in + Nomex HT90-40,5,29,,20,Concurrent,22.1,140,5,,PMMA lead-in consumed; Nomex did not ignite,"NASA NTRS 2017 report, Table I and discussion",0.05,0.29,,0.2,
+SAFFIRE-II,II-8,Grooved PMMA slab,5,29,,20,Concurrent,22.1,600,10,,Flame anchored near leading edge; very slow regression; no long-distance spread,"NASA NTRS 2017 report, Table I and discussion",0.05,0.29,,0.2,
+SAFFIRE-II,II-9,Flat PMMA slab,5,29,10,20,Concurrent,22.0,900,10,,Flame anchored near leading edge; very slow regression; no long-distance spread,"NASA NTRS 2017 report, Table I and discussion",0.05,0.29,0.01,0.2,
+SAFFIRE-III,III-1,Cotton-fiberglass SIBAL,40.6,94,0.37,25,Concurrent,21.2,300,84,2.3,Large-scale concurrent flame spread; steady pyrolysis length about 50 mm,NASA-linked peer-reviewed paper; NASA NTRS summary table,0.406,0.94,0.00037,0.25,0.0023
+SAFFIRE-III,III-2,Cotton-fiberglass SIBAL,40.6,10,0.37,25,Opposed,21.2,60,10,0.98,Opposed-flow spread over remaining fuel,NASA NTRS summary table,0.406,0.1,0.00037,0.25,0.00098

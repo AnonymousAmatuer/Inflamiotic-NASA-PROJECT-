@@ -1,0 +1,620 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --space-void: #08070c;
+  --space-navy: #100d16;
+  --space-panel: rgb(16 13 22 / 91%);
+  --space-line: rgb(112 115 145 / 25%);
+  --space-cyan: #35d9ff;
+  --space-violet: #9475ff;
+  --space-ice: #d8f5ff;
+  --space-muted: #91a8bb;
+  --space-amber: #eebc70;
+  --page: var(--space-void);
+  --ink: #e8f1f8;
+  --muted: var(--space-muted);
+  --ember: var(--space-cyan);
+}
+
+html {
+  background: var(--space-void);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 14% 14%, rgb(176 103 61 / 17%), transparent 39rem),
+    radial-gradient(ellipse at 87% 27%, rgb(118 65 120 / 16%), transparent 42rem),
+    radial-gradient(ellipse at 64% 91%, rgb(139 72 55 / 11%), transparent 40rem),
+    linear-gradient(180deg, #09080e, #100c14 48%, #08080d);
+  font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: "ss01" on;
+  text-rendering: optimizeLegibility;
+  isolation: isolate;
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+.cosmic-backdrop {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(164 125 107 / 3%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(164 125 107 / 3%) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, #000 0%, rgb(0 0 0 / 65%) 44%, transparent 100%);
+}
+
+.starfield {
+  position: absolute;
+  inset: -20%;
+  display: block;
+  background-repeat: repeat;
+  will-change: background-position;
+}
+
+.starfield-near {
+  opacity: 0.37;
+  background-image:
+    radial-gradient(1px 1px at 30px 40px, rgb(222 244 255 / 90%) 50%, transparent 100%),
+    radial-gradient(1.4px 1.4px at 180px 130px, rgb(155 208 242 / 78%) 50%, transparent 100%),
+    radial-gradient(1px 1px at 320px 210px, rgb(241 246 255 / 80%) 50%, transparent 100%);
+  background-size: 390px 300px;
+  animation: star-drift 150s linear infinite;
+}
+
+.starfield-far {
+  opacity: 0.22;
+  background-image:
+    radial-gradient(1px 1px at 95px 65px, #d6eaff 50%, transparent 100%),
+    radial-gradient(1px 1px at 240px 235px, #94c8ec 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 360px 115px, #eaf7ff 50%, transparent 100%);
+  background-size: 510px 390px;
+  animation: star-drift 230s linear infinite reverse;
+}
+
+.nebula-cloud {
+  position: absolute;
+  display: block;
+  width: min(72vw, 880px);
+  aspect-ratio: 1.6;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.13;
+  will-change: transform;
+}
+
+.nebula-cloud-a {
+  top: 6%;
+  left: -28%;
+  background: radial-gradient(ellipse, #cb8059 0%, #8d586a 24%, #583e61 42%, transparent 72%);
+  animation: nebula-drift-a 85s ease-in-out infinite alternate;
+}
+
+.nebula-cloud-b {
+  top: 34%;
+  right: -34%;
+  background: radial-gradient(ellipse, #9e69a4 0%, #794c7b 28%, #5d475f 45%, transparent 74%);
+  animation: nebula-drift-b 110s ease-in-out infinite alternate;
+}
+
+.shooting-star {
+  position: absolute;
+  top: 17%;
+  left: -15%;
+  width: 140px;
+  height: 1px;
+  opacity: 0;
+  transform: rotate(-24deg);
+  background: linear-gradient(90deg, transparent, rgb(166 218 255 / 75%), transparent);
+  animation: distant-shooting-star 27s ease-in 8s infinite;
+}
+
+.passing-planet {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.planet-forward { left: -8rem; animation-name: planet-cross-forward; animation-timing-function: cubic-bezier(.25,.5,.5,1); }
+.planet-reverse { right: -8rem; animation-name: planet-cross-reverse; animation-timing-function: cubic-bezier(.25,.5,.5,1); }
+
+.planet-body {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgb(224 242 255 / 36%);
+  border-radius: 50%;
+  box-shadow: inset -8px -5px 15px rgb(0 0 0 / 68%), inset 4px 2px 8px rgb(232 247 255 / 32%), 0 0 24px rgb(90 152 212 / 13%);
+}
+
+.planet-body::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+  background: linear-gradient(115deg, transparent 31%, rgb(3 9 20 / 30%) 62%, rgb(0 0 0 / 75%));
+}
+
+.planet-blue .planet-body { background: radial-gradient(ellipse at 28% 25%, #a5d4e2 0%, #52869f 24%, #24425e 55%, #101a30 80%); }
+.planet-violet .planet-body { background: radial-gradient(ellipse at 28% 25%, #d0c0e5 0%, #8075a8 23%, #484267 52%, #191b31 82%); }
+.planet-rust .planet-body { background: radial-gradient(ellipse at 28% 25%, #dfc4a1 0%, #9b705c 25%, #593e40 56%, #201c2b 82%); }
+
+@keyframes planet-cross-forward {
+  0% { opacity: 0; transform: translate3d(0, 10vh, 0) rotate(-18deg) scale(.8); }
+  12% { opacity: .78; }
+  82% { opacity: .58; }
+  100% { opacity: 0; transform: translate3d(calc(100vw + 16rem), -12vh, 0) rotate(24deg) scale(1.08); }
+}
+
+@keyframes planet-cross-reverse {
+  0% { opacity: 0; transform: translate3d(0, -9vh, 0) rotate(18deg) scale(1.05); }
+  12% { opacity: .7; }
+  82% { opacity: .52; }
+  100% { opacity: 0; transform: translate3d(calc(-100vw - 16rem), 10vh, 0) rotate(-23deg) scale(.82); }
+}
+
+::selection {
+  color: #031019;
+  background: #75e6ff;
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+select {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 180ms;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--space-cyan);
+  outline-offset: 3px;
+}
+
+.font-serif {
+  font-family: "Space Grotesk", Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+
+.tabular-nums,
+code,
+pre,
+.technical-value {
+  font-family: "JetBrains Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-card {
+  position: relative;
+  border-color: var(--space-line) !important;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgb(110 76 132 / 6%), transparent 22rem),
+    linear-gradient(145deg, rgb(17 20 31 / 96%), rgb(8 12 21 / 95%)) !important;
+  box-shadow: inset 0 1px 0 rgb(219 244 255 / 3%), 0 14px 38px rgb(0 0 0 / 17%);
+  backdrop-filter: blur(12px);
+}
+
+.panel-card:hover {
+  border-color: rgb(148 117 255 / 38%) !important;
+  box-shadow: inset 0 1px 0 rgb(235 228 255 / 5%), 0 16px 42px rgb(0 0 0 / 24%), 0 0 22px rgb(148 117 255 / 5%);
+}
+
+.dashboard-console {
+  max-width: 1480px;
+}
+
+.dashboard-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  margin-top: 1.25rem;
+  overflow: hidden;
+  border: 1px solid rgb(76 133 161 / 30%);
+  border-radius: 1.35rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  background:
+    radial-gradient(ellipse at 91% 48%, rgb(80 69 139 / 12%), transparent 24rem),
+    linear-gradient(120deg, rgb(10 18 32 / 96%), rgb(7 13 24 / 87%));
+  box-shadow: 0 24px 70px rgb(0 0 0 / 22%), inset 0 1px 0 rgb(226 246 255 / 4%);
+}
+
+.dashboard-hero::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  pointer-events: none;
+  content: "";
+  opacity: 0.24;
+  background: repeating-linear-gradient(0deg, transparent 0 29px, rgb(95 164 196 / 10%) 30px), repeating-linear-gradient(90deg, transparent 0 29px, rgb(95 164 196 / 8%) 30px);
+  mask-image: linear-gradient(90deg, transparent, #000);
+}
+
+.hero-brand {
+  width: min(100%, 250px);
+  mix-blend-mode: screen;
+}
+
+.hero-kicker,
+.technical-kicker {
+  color: var(--space-cyan) !important;
+  font-family: "JetBrains Mono", Consolas, ui-monospace, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+}
+
+.hero-heading {
+  max-width: 18ch;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: clamp(1.85rem, 3.6vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  color: #edf8ff;
+}
+
+.hero-description {
+  max-width: 62ch;
+  color: #a7b9c9;
+  line-height: 1.75;
+}
+
+.hero-console {
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgb(84 153 183 / 22%);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: linear-gradient(145deg, rgb(17 16 30 / 72%), rgb(4 10 19 / 56%));
+}
+
+.archive-note {
+  margin-top: 0.8rem;
+  color: #8297a9;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: var(--space-cyan);
+  box-shadow: 0 0 9px rgb(53 217 255 / 55%);
+}
+
+.research-briefing > header h1 {
+  color: #edf8ff;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  letter-spacing: -0.035em;
+}
+
+.briefing-brand {
+  border-color: var(--space-line) !important;
+}
+
+.briefing-back { color: var(--space-cyan) !important; }
+
+.fire-safety-note {
+  border-color: rgb(238 188 112 / 24%) !important;
+  background: linear-gradient(115deg, rgb(238 188 112 / 6%), rgb(10 18 32 / 85%));
+}
+
+.research-briefing .rounded-xl.border,
+.research-briefing .rounded-lg.bg-slate-950\/60 {
+  border-color: var(--space-line) !important;
+}
+
+.research-briefing .rounded-lg.bg-slate-950\/60 {
+  background: rgb(5 11 20 / 72%) !important;
+}
+
+.mission-navigation button:hover { color: #e8f7ff; }
+
+.mission-navigation button:focus-visible { outline-offset: 1px; }
+
+.mission-status .status-dot { animation: status-breathe 3s ease-in-out infinite; }
+
+.dashboard-console section[aria-label="Mission lens"] .panel-card {
+  background: linear-gradient(155deg, rgb(12 22 37 / 96%), rgb(8 14 25 / 96%)) !important;
+}
+
+.dashboard-console section[aria-label="Briefing"] > a {
+  display: flex;
+  min-height: 9rem;
+  flex-direction: column;
+  justify-content: space-between;
+  border-color: var(--space-line);
+  background: linear-gradient(150deg, rgb(13 24 40 / 94%), rgb(7 13 23 / 94%));
+}
+
+.dashboard-console section[aria-label="Briefing"] > a:hover {
+  border-color: rgb(53 217 255 / 45%);
+  transform: translateY(-2px);
+}
+
+.dashboard-console section[aria-label="Briefing"] > a > div:first-child {
+  color: #9bb0c0;
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+}
+
+.dashboard-console input:not([type="range"]),
+.dashboard-console select {
+  border-color: var(--space-line) !important;
+  background-color: rgb(6 13 23 / 93%) !important;
+}
+
+.dashboard-console input:not([type="range"]):focus,
+.dashboard-console select:focus {
+  border-color: rgb(53 217 255 / 64%) !important;
+}
+
+
+.mission-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1.25rem;
+  margin-top: 1rem;
+  border: 1px solid rgb(76 133 161 / 19%);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  color: #859bad;
+  background: rgb(7 13 24 / 73%);
+  font-family: "JetBrains Mono", Consolas, ui-monospace, monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mission-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.mission-ready::before {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  content: "";
+  background: var(--space-cyan);
+  box-shadow: 0 0 10px rgb(53 217 255 / 65%);
+  animation: status-breathe 3s ease-in-out infinite;
+}
+
+.instrument-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.instrument-cell {
+  border: 1px solid rgb(76 133 161 / 19%);
+  border-radius: 0.65rem;
+  padding: 0.7rem 0.75rem;
+  background: linear-gradient(145deg, rgb(15 28 46 / 75%), rgb(8 15 27 / 78%));
+}
+
+.instrument-value {
+  display: block;
+  color: #e7f7ff;
+  font-family: "JetBrains Mono", Consolas, ui-monospace, monospace;
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  letter-spacing: -0.06em;
+}
+
+.instrument-label {
+  display: block;
+  margin-top: 0.2rem;
+  color: #8297a9;
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.mission-navigation {
+  position: sticky;
+  z-index: 20;
+  top: 0.45rem;
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  margin-top: 1.25rem;
+  border: 1px solid rgb(76 133 161 / 24%);
+  border-radius: 0.85rem;
+  padding: 0.4rem;
+  background: rgb(5 10 19 / 91%);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 22%);
+  backdrop-filter: blur(16px);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(53 217 255 / 35%) transparent;
+}
+
+.mission-navigation button {
+  position: relative;
+  flex: 0 0 auto;
+  min-height: 2.35rem;
+  border: 1px solid transparent;
+  border-radius: 0.58rem;
+  padding: 0.55rem 0.8rem;
+  color: #91a4b4;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.mission-navigation button[aria-selected="true"] {
+  border-color: rgb(53 217 255 / 28%);
+  color: #dff9ff;
+  background: linear-gradient(115deg, rgb(53 217 255 / 12%), rgb(148 117 255 / 9%));
+  box-shadow: inset 0 0 16px rgb(53 217 255 / 4%);
+}
+
+.mission-navigation button[aria-selected="true"]::before {
+  position: absolute;
+  right: 0.65rem;
+  bottom: 0.25rem;
+  left: 0.65rem;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--space-cyan), transparent);
+}
+
+.console-section-heading {
+  color: #c7d8e8;
+  font-size: 0.7rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.data-chart circle {
+  transition: r 160ms ease, filter 160ms ease, opacity 160ms ease;
+}
+
+.data-chart circle:hover {
+  r: 7px;
+  filter: drop-shadow(0 0 6px rgb(53 217 255 / 75%));
+}
+
+.data-chart {
+  animation: chart-arrive 400ms ease-out both;
+}
+
+.research-briefing > header {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--space-line);
+  border-radius: 1.2rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  background: radial-gradient(ellipse at 92% 0%, rgb(53 217 255 / 9%), transparent 28rem), linear-gradient(140deg, rgb(10 18 32 / 96%), rgb(6 12 22 / 91%));
+}
+
+.research-briefing > header h1 {
+  color: #eaf7ff;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  letter-spacing: -0.04em;
+}
+
+.research-briefing .briefing-back {
+  color: var(--space-cyan);
+}
+
+.status-readout {
+  color: var(--space-cyan);
+  font-family: "JetBrains Mono", Consolas, ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.flame-glow {
+  animation: flame-glow 2.8s ease-in-out infinite;
+}
+
+.splash-progress {
+  animation: splash-progress 1.2s ease-in-out infinite;
+}
+
+.fire-simulator-flame {
+  animation: fire-simulator-flicker 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes star-drift {
+  to { background-position: 780px 480px, -560px 630px, 430px -390px; }
+}
+
+@keyframes nebula-drift-a {
+  to { transform: translate3d(12vw, 5vh, 0) scale(1.12); }
+}
+
+@keyframes nebula-drift-b {
+  to { transform: translate3d(-10vw, -6vh, 0) scale(0.92); }
+}
+
+@keyframes distant-shooting-star {
+  0%, 82%, 100% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-24deg); }
+  84% { opacity: 0.75; }
+  91% { opacity: 0; transform: translate3d(115vw, 38vh, 0) rotate(-24deg); }
+}
+
+@keyframes status-breathe {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+@keyframes chart-arrive {
+  from { opacity: 0.35; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fire-simulator-flicker {
+  from { transform: scaleX(0.985) scaleY(0.98); opacity: 0.86; }
+  to { transform: scaleX(1.015) scaleY(1.02); opacity: 1; }
+}
+
+@keyframes splash-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(210%); }
+}
+
+@keyframes flame-glow {
+  0%, 100% { filter: drop-shadow(0 0 10px rgb(255 155 87 / 28%)); }
+  50% { filter: drop-shadow(0 0 22px rgb(255 190 117 / 48%)); }
+}
+
+@media (max-width: 760px) {
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-console {
+    max-width: 34rem;
+  }
+
+  .mission-navigation {
+    top: 0.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .starfield, .nebula-cloud, .shooting-star { animation: none !important; }
+  .passing-planet { display: none !important; }
+}
